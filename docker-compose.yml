@@ -1,0 +1,16 @@
+version: '2'
+services:
+  db:
+    image: arminc/clair-db:latest
+    container_name: db
+    ports:
+      - 5432:5432
+  clair:
+    image: arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1
+    container_name: clair
+    depends_on:
+     - db
+    links:
+     - db:postgres
+    ports:
+      - 6060:6060
