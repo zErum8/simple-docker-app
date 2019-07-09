@@ -15,7 +15,7 @@ node {
         def image = docker.build("lt.zerum8/simple-docker-app")
         sh 'docker network create --driver bridge minio-net'
         docker.image("arminc/clair-db:latest").withRun('-d','--name db') {
-            docker.image('arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1').inside('--net minio-net').withRun('-d', '-p 6060:6060','--name clair','--restart on-failure arminc') {
+            docker.image('arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1').inside('--net minio-net -p 6060:6060 -d --name clair --restart on-failure') {
         sh '''
             wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
             mv clair-scanner_linux_amd64 clair-scanner
