@@ -8,6 +8,7 @@ services:
   clair:
     image: arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1
     container_name: clair
+    restart: always
     depends_on:
      - db
     links:
