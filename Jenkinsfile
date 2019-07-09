@@ -10,4 +10,8 @@ node {
         echo "Branch: ${env.BRANCH_NAME}"
         sh "./gradlew clean build"
     }
+
+    stage('Docker') {
+        docker.build("lt.zerum8/simple-docker-app")
+    }
 }
