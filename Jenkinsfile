@@ -15,7 +15,7 @@ node {
         def image = docker.build("lt.zerum8/simple-docker-app")
         sh "docker run -p 5432:5432 -d --name db arminc/clair-db:latest"
         sh "sleep 15"
-        sh "docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0"
+        sh "docker run -p 6060:6060 --link db:postgres -d --name clair --restart on-failure arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1"
         sh "sleep 5"
 
         sh "wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64"
