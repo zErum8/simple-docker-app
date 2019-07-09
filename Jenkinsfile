@@ -23,6 +23,6 @@ node {
         sh "chmod +x clair-scanner"
 
         def host = sh(returnStdout: true, script: 'hostname -i').trim()
-        sh "clair-scanner -c  --ip ${host} --t High lt.zerum8/simple-docker-app:latest"
+        sh "./clair-scanner -c  --ip ${host} --t High lt.zerum8/simple-docker-app:latest"
     }
 }
