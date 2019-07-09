@@ -22,6 +22,6 @@ node {
         sh "mv clair-scanner_linux_amd64 clair-scanner"
         sh "chmod +x clair-scanner"
 
-        sh "./clair-scanner --ip $(docker network inspect bridge --format "{{range .IPAM.Config}}{{.Gateway}}{{end}}") -t High lt.zerum8/simple-docker-app:latest"
+        sh "./clair-scanner --ip $(docker network inspect bridge --format '{{range .IPAM.Config}}{{.Gateway}}{{end}}') -t High lt.zerum8/simple-docker-app:latest"
     }
 }
