@@ -12,6 +12,17 @@ node {
     }
 
     stage('Docker') {
-        docker.build("lt.zerum8/simple-docker-app")
+        def image = docker.build("lt.zerum8/simple-docker-app")
+        sh "docker run -p 5432:5432 -d --name db arminc/clair-db:latest"
+        sh "sleep 15"
+        sh "docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0"
+        sh "sleep 5"
+
+        sh "wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64"
+        sh "mv clair-scanner_linux_amd64 clair-scanner"
+        sh "chmod +x clair-scanner"
+
+        def host = sh(returnStdout: true, script: 'hostname -i').trim()
+        sh "clair-scanner -c  --ip ${host} --t High lt.zerum8/simple-docker-app:latest"
     }
 }
