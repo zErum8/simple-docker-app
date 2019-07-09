@@ -18,7 +18,7 @@ node {
             wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
             mv clair-scanner_linux_amd64 clair-scanner
             chmod +x clair-scanner
-            ./clair-scanner --ip $(clairEndpoint) -t High lt.zerum8/simple-docker-app:latest || true
+            ./clair-scanner --ip ${clairEndpoint} -t High lt.zerum8/simple-docker-app:latest || true
         '''
     }
 }
