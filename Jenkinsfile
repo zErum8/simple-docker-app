@@ -15,13 +15,13 @@ node {
         docker.build("lt.zerum8/simple-docker-app")
 
         withDockerNetwork{ n ->
-           docker.image('arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1').withRun("--network ${n} -p 6060:6060 --name clair --restart on-failure") {
-              docker.image('arminc/clair-db:latest').withRun("--network ${n} --name postgres -p 5432:5432") {
+           docker.image('arminc/clair-db:latest').withRun("--network ${n} --name postgres") {
+                docker.image('arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1').withRun("--network ${n} -p 6060:6060 --name clair --restart on-failure") {
                 sh '''
                     wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
                     mv clair-scanner_linux_amd64 clair-scanner
                     chmod +x clair-scanner
-                    retries=-30
+                    retries=0
                     echo "Waiting for clair daemon to start"
                     while( ! wget -T 10 -q -O /dev/null http://localhost:6060/v1/namespaces ) ; do sleep 1 ;echo -n "." ; if [ $retries -eq 10 ] ; then echo " Timeout, aborting." ; exit 1 ; fi ; retries=$(($retries+1)) ; done
                     ./clair-scanner --ip $(docker network inspect bridge --format '{{range .IPAM.Config}}{{.Gateway}}{{end}}') -t High lt.zerum8/simple-docker-app:latest || true
@@ -30,7 +30,6 @@ node {
            }
         }
     }
-
 }
 
 def withDockerNetwork(Closure inner) {
