@@ -15,8 +15,8 @@ node {
         docker.build("lt.zerum8/simple-docker-app")
 
         withDockerNetwork{ n ->
-           docker.image('arminc/clair-db:latest').withRun("--network ${n} --name db") { c->
-              docker.image('arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1').inside("--network ${n} -p 6060:6060 --name clair --restart on-failure --entrypoint=''") {
+           docker.image('arminc/clair-local-scan:v2.0.8_fe9b059d930314b54c78f75afe265955faf4fdc1').withRun("--network ${n} -p 6060:6060 --name clair --restart on-failure") {
+              docker.image('arminc/clair-db:latest').inside("--network ${n} --name db") {
                 sh '''
                     wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
                     mv clair-scanner_linux_amd64 clair-scanner
