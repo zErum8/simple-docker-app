@@ -13,6 +13,7 @@ node {
 
     stage('Docker') {
         docker.build("lt.zerum8/simple-docker-app")
+        def imageToScan = "lt.zerum8/simple-docker-app:latest"
 
         withDockerNetwork{ n ->
            docker.image('arminc/clair-db:latest').withRun("--network ${n} --name postgres") {
@@ -21,7 +22,7 @@ node {
                     wget https://github.com/arminc/clair-scanner/releases/download/v8/clair-scanner_linux_amd64
                     mv clair-scanner_linux_amd64 clair-scanner
                     chmod +x clair-scanner
-                    ./clair-scanner --ip $(docker network inspect bridge --format '{{range .IPAM.Config}}{{.Gateway}}{{end}}') -t High lt.zerum8/simple-docker-app:latest || true
+                    ./clair-scanner --ip $(docker network inspect bridge --format '{{range .IPAM.Config}}{{.Gateway}}{{end}}') -t High '''+imageToScan+''' || true
                 '''
               }
            }
